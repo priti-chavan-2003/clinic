@@ -1,0 +1,223 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>Appointment Management</h2>
+
+<p class="text-muted">
+    Schedule and manage patient appointments.
+</p>
+
+
+<div class="card my-4">
+
+    <div class="card-header">
+
+        <h5>Book Appointment</h5>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            action="{{ url_for('add_appointment') }}"
+        >
+
+            <div class="row g-3">
+
+
+                <div class="col-md-3">
+
+                    <label>Patient Name</label>
+
+                    <input
+                        name="patient_name"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <label>Date</label>
+
+                    <input
+                        type="date"
+                        name="date"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <label>Time</label>
+
+                    <input
+                        type="time"
+                        name="time"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label>Purpose</label>
+
+                    <input
+                        name="purpose"
+                        class="form-control"
+                        placeholder="Appointment purpose"
+                    >
+
+                </div>
+
+
+                <div class="col-md-2 d-flex align-items-end">
+
+                    <button class="btn btn-primary w-100">
+                        Book
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-body">
+
+        <table class="table">
+
+            <thead>
+
+            <tr>
+
+                <th>Patient</th>
+                <th>Date</th>
+                <th>Time</th>
+                <th>Purpose</th>
+                <th>Status</th>
+                <th>Update</th>
+
+            </tr>
+
+            </thead>
+
+
+            <tbody>
+
+            {% for appointment in appointments %}
+
+                <tr>
+
+                    <td>
+                        {{ appointment.patient_name }}
+                    </td>
+
+                    <td>
+                        {{ appointment.date }}
+                    </td>
+
+                    <td>
+                        {{ appointment.time }}
+                    </td>
+
+                    <td>
+                        {{ appointment.purpose }}
+                    </td>
+
+                    <td>
+
+                        <span class="badge bg-primary">
+
+                            {{ appointment.status }}
+
+                        </span>
+
+                    </td>
+
+
+                    <td>
+
+                        <form
+                            method="POST"
+                            action="{{
+                                url_for(
+                                    'update_appointment',
+                                    id=appointment.id
+                                )
+                            }}"
+                        >
+
+                            <select
+                                name="status"
+                                class="form-select"
+                                onchange="this.form.submit()"
+                            >
+
+                                {% for status in [
+                                    "Scheduled",
+                                    "Confirmed",
+                                    "Completed",
+                                    "Cancelled"
+                                ] %}
+
+                                    <option
+                                        {% if appointment.status == status %}
+                                        selected
+                                        {% endif %}
+                                    >
+                                        {{ status }}
+                                    </option>
+
+                                {% endfor %}
+
+                            </select>
+
+                        </form>
+
+                    </td>
+
+                </tr>
+
+            {% else %}
+
+                <tr>
+
+                    <td
+                        colspan="6"
+                        class="text-center"
+                    >
+                        No appointments available.
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+{% endblock %}

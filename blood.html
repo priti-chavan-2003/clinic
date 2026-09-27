@@ -1,0 +1,247 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h2>🩸 Blood Requirements</h2>
+
+<p class="text-muted">
+    Search and report blood requirements.
+</p>
+
+
+<div class="card my-4">
+
+    <div class="card-header">
+        <h5>Report Blood Requirement</h5>
+    </div>
+
+
+    <div class="card-body">
+
+        <form
+            method="POST"
+            action="{{ url_for('add_blood') }}"
+        >
+
+            <div class="row g-3">
+
+
+                <div class="col-md-3">
+
+                    <label>Requester</label>
+
+                    <input
+                        name="requester"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <label>Phone</label>
+
+                    <input
+                        name="phone"
+                        class="form-control"
+                    >
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <label>Blood Group</label>
+
+                    <select
+                        name="blood_group"
+                        class="form-select"
+                    >
+
+                        <option>A+</option>
+                        <option>A-</option>
+                        <option>B+</option>
+                        <option>B-</option>
+                        <option>AB+</option>
+                        <option>AB-</option>
+                        <option>O+</option>
+                        <option>O-</option>
+
+                    </select>
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <label>Units</label>
+
+                    <input
+                        type="number"
+                        name="units"
+                        class="form-control"
+                        min="1"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-3">
+
+                    <label>Location</label>
+
+                    <input
+                        name="location"
+                        class="form-control"
+                        required
+                    >
+
+                </div>
+
+
+                <div class="col-md-2">
+
+                    <button class="btn btn-danger w-100">
+                        Submit
+                    </button>
+
+                </div>
+
+            </div>
+
+        </form>
+
+    </div>
+
+</div>
+
+
+<div class="card">
+
+    <div class="card-header">
+
+        <form
+            method="GET"
+            class="row g-2"
+        >
+
+            <div class="col-md-4">
+
+                <select
+                    name="blood_group"
+                    class="form-select"
+                >
+
+                    <option value="">
+                        All Blood Groups
+                    </option>
+
+                    {% for group in [
+                        "A+","A-",
+                        "B+","B-",
+                        "AB+","AB-",
+                        "O+","O-"
+                    ] %}
+
+                        <option
+                            value="{{ group }}"
+                            {% if blood_group == group %}
+                            selected
+                            {% endif %}
+                        >
+                            {{ group }}
+                        </option>
+
+                    {% endfor %}
+
+                </select>
+
+            </div>
+
+
+            <div class="col-md-5">
+
+                <input
+                    name="location"
+                    value="{{ location }}"
+                    class="form-control"
+                    placeholder="Search location"
+                >
+
+            </div>
+
+
+            <div class="col-md-3">
+
+                <button class="btn btn-primary w-100">
+                    Search
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
+
+    <div class="card-body">
+
+        <div class="row">
+
+            {% for request in blood_requests %}
+
+                <div class="col-md-4 mb-3">
+
+                    <div class="border rounded p-3">
+
+                        <h3 class="text-danger">
+
+                            {{ request.blood_group }}
+
+                        </h3>
+
+                        <h5>
+
+                            {{ request.units }}
+                            unit(s)
+
+                        </h5>
+
+                        <p>
+                            👤 {{ request.requester }}
+                        </p>
+
+                        <p>
+                            📍 {{ request.location }}
+                        </p>
+
+                        <p>
+                            📞 {{ request.phone }}
+                        </p>
+
+                        <span class="badge bg-success">
+                            {{ request.status }}
+                        </span>
+
+                    </div>
+
+                </div>
+
+            {% else %}
+
+                <p class="text-muted">
+                    No blood requirements found.
+                </p>
+
+            {% endfor %}
+
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}
